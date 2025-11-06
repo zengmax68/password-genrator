@@ -100,4 +100,44 @@
 
       let allChars = "";
       if (useLower) allChars += lower;
-      if (useUpper) allChars += upper
+      if (useUpper) allChars += upper;
+      if (useNumbers) allChars += numbers;
+      if (useSymbols) allChars += symbols;
+
+      if (allChars === "") return "⚠️ Select at least one character type";
+
+      let password = "";
+      for (let i = 0; i < length; i++) {
+        const randIndex = Math.floor(Math.random() * allChars.length);
+        password += allChars[randIndex];
+      }
+      return password;
+    }
+
+    function evaluateStrength(pw) {
+      let score = 0;
+      if (pw.length >= 8) score += 25;
+      if (/[A-Z]/.test(pw)) score += 25;
+      if (/[0-9]/.test(pw)) score += 25;
+      if (/[^A-Za-z0-9]/.test(pw)) score += 25;
+      document.getElementById("strength").value = score;
+    }
+
+    function copyPasswords() {
+      const text = document.getElementById("output").textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Copied to clipboard!");
+      });
+    }
+
+    function downloadPasswords() {
+      const text = document.getElementById("output").textContent;
+      const blob = new Blob([text], { type: "text/plain" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "passwords.txt";
+      link.click();
+    }
+  </script>
+</body>
+</html>
