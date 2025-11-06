@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Password Generator</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 2rem;
+      max-width: 500px;
+      margin: auto;
+      transition: background 0.3s, color 0.3s;
+    }
+    input[type="checkbox"], input[type="number"] {
+      margin-right: 5px;
+    }
+    button {
+      margin: 5px 0;
+      padding: 10px;
+      cursor: pointer;
+    }
+    #output {
+      margin-top: 15px;
+      font-weight: bold;
+      white-space: pre-wrap;
+      word-break: break-word;
+      border: 1px solid #ccc;
+      padding: 10px;
+      background: #f9f9f9;
+    }
+    .dark {
+      background-color: #121212;
+      color: #eee;
+    }
+    .dark input, .dark button {
+      background-color: #333;
+      color: #eee;
+      border: 1px solid #555;
+    }
+    .dark #output {
+      background-color: #222;
+      border-color: #444;
+    }
+  </style>
+</head>
+<body>
+  <h2>Password Generator</h2>
+
+  <label>Password Length:
+    <input type="number" id="length" value="12" min="4" max="50" />
+  </label><br>
+
+  <label>How many passwords?
+    <input type="number" id="count" value="5" min="1" max="50" />
+  </label><br><br>
+
+  <label><input type="checkbox" id="lower" checked /> Lowercase</label><br>
+  <label><input type="checkbox" id="upper" checked /> Uppercase</label><br>
+  <label><input type="checkbox" id="numbers" checked /> Numbers</label><br>
+  <label><input type="checkbox" id="symbols" /> Symbols</label><br><br>
+
+  <label><input type="checkbox" id="darkMode" onchange="toggleDarkMode()" /> Dark Mode</label><br><br>
+
+  <button onclick="generatePasswords()">Generate</button>
+  <button onclick="copyPasswords()">Copy</button>
+  <button onclick="downloadPasswords()">Download</button>
+
+  <div>Password Strength:</div>
+  <progress id="strength" value="0" max="100"></progress>
+
+  <div id="output"></div>
+
+  <script>
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark");
+    }
+
+    function generatePasswords() {
+      const count = parseInt(document.getElementById("count").value);
+      let results = "";
+      for (let i = 0; i < count; i++) {
+        const pw = createOnePassword();
+        results += pw + "\n";
+        if (i === 0) evaluateStrength(pw);
+      }
+      document.getElementById("output").textContent = results.trim();
+    }
+
+    function createOnePassword() {
+      const length = parseInt(document.getElementById("length").value);
+      const useLower = document.getElementById("lower").checked;
+      const useUpper = document.getElementById("upper").checked;
+      const useNumbers = document.getElementById("numbers").checked;
+      const useSymbols = document.getElementById("symbols").checked;
+
+      const lower = "abcdefghijklmnopqrstuvwxyz";
+      const upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      const numbers = "0123456789";
+      const symbols = "!@#$%^&*()_+[]{}<>?/";
+
+      let allChars = "";
+      if (useLower) allChars += lower;
+      if (useUpper) allChars += upper
